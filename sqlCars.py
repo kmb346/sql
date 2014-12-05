@@ -1,11 +1,12 @@
 import sqlite3
 
-c = sqlite3.connect("cars.db")
-
-cursor  = c.cursor()
-
-cursor.execute("""CREATE TABLE Inventory
-			   (Make TEXT, Model TEXT, Quantity INT)
-				""")				
-
-c.close()
+with sqlite3.connect("cars.db") as connection:
+    c = connection.cursor()
+    
+    c.execute("SELECT * FROM inventory WHERE make='Ford'")
+	
+    rows = c.fetchall()	
+    
+    for r in rows:
+        print r[0], r[1], r[2]
+		
