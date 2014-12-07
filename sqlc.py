@@ -1,41 +1,25 @@
-# executemany() method
-
+# SQLite Functions
 
 import sqlite3
 
 with sqlite3.connect("new.db") as connection:
     c = connection.cursor()
 	
-    c.execute("""CREATE TABLE regions
-              (city TEXT, region TEXT)
-              """)
+	# create a dictionary of sql queries
+    sql = {'average': "SELECT avg(population) FROM population",
+	       'maximum': "SELECT max(population) FROM population",
+		   'minimum': "SELECT min(population) FROM population",
+		   'sum': "SELECT sum(population) FROM population",
+		   'count': "SELECT count(city) FROM population"}
 
-    cities = [
-              ('New York City', 'Northeast'),
-              ('San Francisco', 'West'),
-              ('Chicago', 'Midwest'),
-              ('Houston', 'South'),
-			  ('Phoenix', 'West'),
-			  ('Boston', 'Northeast'),
-			  ('Los Angeles', 'West'),
-			  ('Houston', 'South'),
-			  ('Philadelphia', 'Northeast'),
-			  ('San Antonio', 'South'),
-			  ('San Diego', 'West'),
-			  ('Dallas', 'South'),
-			  ('San Jose', 'West'),
-			  ('Jacksonville', 'South'),
-			  ('Indianapolis', 'Midwest'),
-			  ('Austin', 'South'),
-			  ('Detroit', 'Midwest')
-			  ]
-			  
-    c.executemany("INSERT INTO regions VALUES(?, ?)", cities)
-	
-    c.execute("SELECT * FROM regions ORDER BY region ASC")
-	
-    rows = c.fetchall()
-	
-    for r in rows:
-        print r[0], r[1]
-    
+    # run each sql query item in the dictionary
+    for keys, values in sql.iteritems():
+
+        #run sql
+        c.execute(values)
+
+        # fetchone() retrieves one record from the query
+        result = c.fetchone()
+		
+        # output the result to the screen
+        print keys + ":", result[0]
