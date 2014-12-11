@@ -18,5 +18,6 @@ with sqlite3.connect("new.db") as connection:
     rows = c.fetchall()
 	
     for r in rows:
-        print r[0], r[1], r[2]
+        
+		print r[0], r[1], r[2]
 		
