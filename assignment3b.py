@@ -1,34 +1,38 @@
 import sqlite3
 
-with sqlite3.connect("newnum.db") as connection:
-    c = connection.cursor()
+connection = sqlite3.connect("newnum.db")
+
+c = connection.cursor()
+
 	
-    choices = {'1.  ': 'average',
-	           '2.  ': 'maximum',
-			   '3.  ': 'minimum',
-			   '4.  ': 'add',
-			   '5.  ': 'close' 
-			   }
-			   
-    for keys, values in choices:
-        print keys + values
-		
-    choice = raw_input("Choose an option:  ")
+#  display options to user
+prompt = """
+    Select an option:
+    1. average
+    2. maximum
+    3. minimum
+    4. add
+    5. close 
+	"""	   
 	
-    if choice.lower() == 'average':
-        c.execute("SELECT avg(num) FROM Numbers")
-    elif choice.lower() =='maximum':
-        c.execute("SELECT max(num)FROM Numbers")
-    elif choice.lower() =='minimum':
-        c.execute("SELECT min(num)FROM Numbers")
-    elif choice.lower() =='add':
-        c.execute("SELECT sum(num)FROM Numbers")
-    else choice.lower() =='close':
-        break 
+	
+# get user input and loop until valid selection is entered
+while True:
+    choice = raw_input(prompt)
     
-    result = c.fetchone()
+    # check if valid selection    
+    if choice in set(["1", "2", "3", "4"]):
 	
-    print "The result is:  " + str(result)
-	
+        sql = {1: "avg", 2: "max", 3: "min", 4: "sum"}[int(choice)]
         
-		
+        c.execute("SELECT {}(num) FROM numbers".format(sql))
+
+        output = c.fetchall()
+        
+        print sql + ":  %f" % output[0]	
+    
+    elif choice == "5":
+        print "Exit"
+        break
+   
+	
